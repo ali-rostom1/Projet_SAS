@@ -55,6 +55,7 @@ int validatePhone(char *phone);
 int validateDate(Date date);
 int generateID();
 int findbyID(int id,Reservation *reservation);
+const char* statusConversionToString(Status status);
 void init_ReservationsArray();
 void free_ReservationsArray();
 void add10inputs();
@@ -145,6 +146,15 @@ int generateID(){
 int findbyID(char *id,Reservation *reservation){
     for(int i=0;i<tracker;i++){
         if((id == reservation[i].id)) return i;
+    }
+}
+const char* statusConversionToString(Status status){
+    switch(status){
+        case VALID: return "Valid";
+        case REPORTED: return "Reported";
+        case CANCELED: return "Canceled";
+        case TREATED: return "Treated";
+        default : return "Invalid";
     }
 }
 void init_ReservationsArray(){
@@ -242,12 +252,29 @@ void delete_Reservation(int id){
             printf("\nReservation with ID %d deleted successfully!\n", id);
             break;
         }
-        
     }
     printf("\nReservation with the %d ID wasnt found!",id);
 }
-void display_Reservation();
-void displayAllReservation();
+
+void display_Reservation(Reservation *reservation){
+    printf("\n\tReservation ID : %d",reservation->id);
+    printf("\n\tReservation last name : %s ",reservation->lastName);
+    printf("\n\tReservation first name : %s",reservation->firstName);
+    printf("\n\tReservation phone : %s",reservation->phone);
+    printf("\n\tReservation age : %s",reservation->age);
+    printf("\n\tReservation status : %s",statusConversionToString(reservation->status));
+    printf("\n\tReservation date(DD/MM/YYYY) : %02d/%02d/%04d",reservation->date.day,reservation->date.month,reservation->date.year);
+}
+void displayAllReservation(){
+    if(tracker==0){
+        printf("\nReservations list is empty.");
+        return;
+    }
+    for(int i=0;i<tracker;i++){
+        printf("\nReservation number %d",i+1);
+        display_Reservation(&reservations[i]);
+    }
+}
 void sort_byName();
 void sort_byDate();
 void sort_byStatus();
