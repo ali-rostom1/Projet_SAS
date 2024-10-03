@@ -28,3 +28,6 @@ typedef struct{                 //this is the main reservation structure
     Date date;
 }Reservation;
 
+void addReservation(){
+    
+}
