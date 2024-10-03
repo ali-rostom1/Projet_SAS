@@ -5,6 +5,7 @@ L'application comprend un menu principal avec les fonctionnalités suivantes :
 
 1. Ajouter une réservation :
 Permet d'ajouter une nouvelle réservation en fournissant les informations suivantes :
+
 Nom
 Prénom
 Téléphone
@@ -12,7 +13,6 @@ Téléphone
 Statut (validé, reporté, annulé, traité).
 Référence unique (génération automatique)
 Date de réservation 
-
 2. Modifier ou supprimer une réservation :
 Modifier ou supprimer une réservation existante en fonction de la référence unique.
 
@@ -23,18 +23,15 @@ Consulter les informations complètes d'une réservation, y compris la date et l
 Tri des réservations par Nom.
 Tri des réservations par date.  (Optionnel)
 Tri des réservations par statut (validé, reporté, annulé, traité).
-
 5. Recherche des réservations :
 Recherche d'une réservation par référence unique.
 Recherche d'une réservation par nom.
 Recherche d'une réservation par date. (Optionnel)
-
 6. Statistiques :
 Calculer la moyenne d'âge des patients ayant réservé.
 Afficher le nombre de patients par tranche d'âge (ex. : 0-18 ans, 19-35 ans, 36+ ans).
 Générer des statistiques pour connaître le nombre total de réservations par statut (validé, annulé, etc.).
 NB : Le projet doit contenir 10 insertions par défaut (10 éléments insérés automatiquement lors de l'exécution du programme).
-
 Fonctionnalités Requises :
 
 Variables : Pour stocker les informations des réservations .
