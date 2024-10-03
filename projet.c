@@ -24,8 +24,8 @@ typedef struct{                 //this is the main reservation structure
     char *lastName;         
     char *phone;                 //I used pointers just so i can use the memory allocation which could help if theres gonna be a lot of Reservations
     char *age;
-    Status status;
     int id;
+    Status status;
     Date date;
 }Reservation;
 
@@ -49,7 +49,8 @@ void ReservationStatisticsByStatus();
 
 //utility functions
 void clearBuffer();
-int validateAge(int age);
+void inputReservation(Reservation *reservation);
+int validateAge(char *age);
 int validatePhone(char *phone);
 int validateDate(Date date);
 int generateID();
@@ -72,7 +73,49 @@ void clearBuffer(){     //clear buffer would save us a lot of time with miss inp
     char c;
     while((c=getchar()!='\n') && c != EOF);
 }
-int validateAge(int age){
+void inputReservation(Reservation *reservation){
+    printf("\n\t\tReservation first name : ");
+    scanf(" %[^\n]",reservation->firstName);
+    printf("\n\t\tReservation last name : ");
+    scanf(" %[^\n]",reservation->lastName);
+
+        printf("\n\t\tReservation phone number : ");
+        scanf(" %[^\n]",reservation->phone);
+        while(!validatePhone(reservation->phone)){
+            printf("\n\t\tEnter a valid phone number : ");
+            scanf(" %[^\n]",reservation->phone);
+        }
+
+        printf("\n\t\tReservation age : ");
+        scanf(" %[^\n]",reservation->age);
+        while(!validateAge(reservation->age)){
+            printf("\n\t\tEnter a valid age : ");
+            scanf(" %[^\n]",reservation->age);
+        }
+
+        int statusindx;
+        printf("\n\t\tReservation status :");
+        printf("\n\t\t\tFor valid type 1");
+        printf("\n\t\t\tFor reported type 2");
+        printf("\n\t\t\tFor canceled type 3");
+        printf("\n\t\t\tFor treated type 4");
+        printf("\n\t\t\tType(1 to 4): ");
+        while(scanf("%d",&statusindx)!=1 || statusindx<1 || statusindx>4){
+            printf("\n\t\t\tInvalid input, Type (1 to 4): ");
+            clearBuffer();
+        }
+        reservation->status = (status)statusindx;
+        
+        printf("\n\t\tReservation Date(format DD/MM/YYYY) : ");
+        while(scanf("%d/%d/%d",&reservation->date.day,&reservation->date.month,&reservation->date.year)!=3 || !validateDate(reservation->date)){
+            printf("\n\t\tEnter a valid Date with the given format(DD/MM/YYYY): ");
+            scanf("%d/%d/%d",&reservation->date.day,&reservation->date.month,&reservation->date.year);
+            clearBuffer();
+        }
+        clearBuffer();
+
+}
+int validateAge(char *age){
     return (age>=0 && age<=120);  //its either gonna return 1 or 0 (true or false)
 
 
@@ -96,9 +139,10 @@ int validateDate(Date date){
     return 1;
 }
 int generateID(){
-    
+    int idcounter = 1500;
+    return ++idcounter; //incrementation behind the variable so it assigns the value then returns it
 }
-int findbyID(int id,Reservation *reservation){
+int findbyID(char *id,Reservation *reservation){
     for(int i=0;i<tracker;i++){
         if((id == reservation[i].id)) return i;
     }
@@ -148,46 +192,60 @@ void add_Reservation(){
         reservations[i].phone = (char*)malloc(sizeof(char)*MAX_LENGTH);
         reservations[i].age = (char*)malloc(sizeof(char)*MAX_LENGTH);
         printf("\n\tReservation number %d",i+1);
-        printf("\n\t\tReservation first name : ");
-        scanf(" %[^\n]",reservations[i].firstName);
-        printf("\n\t\tReservation last name : ");
-        scanf(" %[^\n]",reservations[i].lastName);
-
-        printf("\n\t\tReservation phone number : ");
-        scanf(" %[^\n]",reservations[i].phone);
-        while(!validatePhone(reservations[i].phone)){
-            printf("\n\t\tEnter a valid phone number : ");
-            scanf(" %[^\n]",reservations[i].phone);
-        }
-
-        printf("\n\t\tReservation age : ");
-        scanf(" %[^\n]",reservations[i].age);
-        while(!validateAge(reservations[i].age)){
-            printf("\n\t\tEnter a valid age : ");
-            scanf(" %[^\n]",reservations[i].age);
-        }
-
-        int statusindx;
-        printf("\n\t\tReservation status :");
-        printf("\n\t\t\tFor valid type 1");
-        printf("\n\t\t\tFor reported type 2");
-        printf("\n\t\t\tFor canceled type 3");
-        printf("\n\t\t\tFor treated type 4");
-        printf("\n\t\t\tType(1 to 4): ");
-        while(scanf("%d",&statusindx)!=1 || statusindx<1 || statusindx>4){
-            printf("\n\t\t\tInvalid input, Type (1 to 4): ");
-            clearBuffer();
-        }
-        reservations[i].status = (status)statusindx;
-
-        
-
-
-
+        inputReservation(&reservation[i]);
+        reservations[i].id = generateID();
     }
+    printf("\n\t\t\t%d reservation(s) added successfully!",nb);
+    tracker+=nb;
 }
-void edit_Reservation(int id);
-void delete_Reservation(int id);
+void edit_Reservation(int id){
+    if(tracker==0) {
+        printf("\nreservation list is empty ");
+        return;
+    }
+    for(int i=0;i<tracker;i++){
+        if(reservations[i].id==id){
+            printf("\nReservation found:");
+            display_Reservation();
+            printf("\n\tReservation number %d",i+1);
+            inputReservation(&Reservation[i]);
+            printf("\nReservation updated successfully!");
+            return;
+        }
+    }
+    printf("\nReservation with the given ID wasnt found.");
+}
+void delete_Reservation(int id){
+    if(tracker==0){
+        printf("\nreservation list is empty ");
+        return;
+    }
+    char answer;
+    for(int i=0;i<tracker;i++){
+        if(reservations[i].id==id){
+            printf("\nReservation found:");
+            display_Reservation();
+            printf("\nAre you sure you want to delete it?? (y or n): ");
+            while(scanf("%c",&answer)!=1 || (tolower(c)!='y' && tolower(c)!='n')){
+                printf("\nType Y for yes, N for no : ");
+                clearBuffer();
+            }
+            clearBuffer();
+            if(tolower(c)=='n'){
+                printf("\nDeletion was canceled.");
+                return;
+            }
+            for(int j=i;j<tracker-1;j++){
+                reservation[j]=reservation[j+1];
+            }
+            tracker--;
+            printf("\nReservation with ID %d deleted successfully!\n", id);
+            break;
+        }
+        
+    }
+    printf("\nReservation with the %d ID wasnt found!",id);
+}
 void display_Reservation();
 void displayAllReservation();
 void sort_byName();
